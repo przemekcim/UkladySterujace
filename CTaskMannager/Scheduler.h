@@ -18,15 +18,16 @@ typedef struct
 } Task;
 
 
-extern void scheduler_init();
-	
+extern void scheduler_init(uint8_t* display);
+
 extern void scheduler_run();
 extern void scheduler_addPeriodicTask(TASK_PTR task, uint16_t interval);
 extern void scheduler_addOneShotTask(TASK_PTR task, uint16_t interval);
-	
+
 extern Task scheduler_tasks[MAX_TASK];
 extern uint8_t scheduler_taskCount;
-
+extern uint8_t scheduler_displayCount;
+extern uint8_t* scheduler_display;
 
 
 
