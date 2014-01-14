@@ -29,6 +29,12 @@ void scheduler_init(uint8_t* display)
 	
 	scheduler_display = display;
 	scheduler_displayCount = 0;
+	
+	if(display) 
+	{
+		DDRA = 0xff;
+		DDRB |= 0x0f;
+	}
 }
 
 void scheduler_run()
@@ -37,7 +43,7 @@ void scheduler_run()
 	sei();
 	uint8_t i = 0;
 
-	while(scheduler_taskCount)
+	while(scheduler_taskCount || scheduler_display)
 	{
 		// if task is ready
 		if(scheduler_tasks[i].ready)
@@ -86,7 +92,7 @@ ISR(TIMER0_COMP_vect)
 		// 3rd and 4th bit of counter indicates which (of 4) displayer are being refreshed
 		uint8_t toRefresh = (scheduler_displayCount>>2) & 0x3;
 		PORTA = scheduler_display[toRefresh];
-		PORTB =~(1<<(toRefresh);
+		PORTB =~(1<<(toRefresh));
 	}	
 	
 	// for each task

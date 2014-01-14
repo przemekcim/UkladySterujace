@@ -6,8 +6,12 @@ const uint8_t DIGIT_DOT = 0x7f;
 
 void binToDecDigits(uint16_t val, uint8_t* tab, uint8_t n)
 {
-	for(uint8_t i = 0; i<n; ++i) {
-		tab[i] = DIGITS[val % 10];
-		val /= 10;
+	for(uint8_t i = 0; i<4; ++i) {
+		if(i<n) {
+			tab[i] = DIGITS[val % 10];
+			val /= 10;
+		} else {
+			tab[i] = 0xFF;
+		}		
 	}
 }
