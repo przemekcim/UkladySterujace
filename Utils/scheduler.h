@@ -39,10 +39,10 @@ extern void scheduler_addOneShotTask(TASK_PTR task, uint16_t interval);
 
 
 
-extern Task scheduler_tasks[MAX_TASK];
-extern uint8_t scheduler_taskCount;
-extern uint8_t scheduler_displayCount;
-extern uint8_t* scheduler_display;
+//extern Task scheduler_tasks[MAX_TASK];
+//extern uint8_t scheduler_taskCount;
+//extern uint8_t scheduler_displayCount;
+//extern uint8_t* scheduler_display;
 
 
 
