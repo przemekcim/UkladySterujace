@@ -5,10 +5,18 @@
 #include "serial.h"
 #include "HD44780.h"
 
-SClock gClock;	// global clock
-const char* responseMsg = 0;
 const char* invalidMsg = "\nInvalid format\n>";
 const char* correctMsg = "\nDone\n>";
+
+SClock gClock;	// global clock
+
+// this remembers actions to do
+// cause we want gClock to be modyfied only from schedluer tasks
+const char* responseMsg = 0;
+uint8_t hToSet;
+uint8_t mToSet;
+bool toSet = 0;	// 0 - nothing, 1 - time, 2,3,4,5 - set alarm, 6,7,8,9 - clear alarm
+
 
 void oneSecondTask()
 {
@@ -23,6 +31,15 @@ void keyboardTask()
 	// this task also is responsible for response
 	if(responseMsg) serial_send(responseMsg);
 	responseMsg = 0;
+	
+	// and actions
+	if(toSet == 1) {
+		gClock.setTime(hToSet, mToSet);
+	} else if (toSet > 1 && toSet < 6) {
+		gClock.setAlarm(toSet-2, hToSet, mToSet);
+	} else if (toSet > 5 && toSet<10) {
+		gClock.clearAlarm(toSet-6);
+	}
 }
 
 // parses serial input message
@@ -45,7 +62,7 @@ void onReceiveTask(char* msg)
 		}
 		
 		// clear this clock
-		gClock.clearAlarm(noAlarm);
+		toSet = noAlarm + 6;
 		responseMsg = correctMsg;
 		return;
 	}
@@ -64,10 +81,14 @@ void onReceiveTask(char* msg)
 	
 	if(command == 'c')
 	{
-		gClock.setTime(arg1*10+arg2, arg3*10+arg4);
+		hToSet = arg1*10+arg2;
+		mToSet = arg3*10+arg4;
+		toSet = 1;
 		responseMsg = correctMsg;
 	} else if(command>'0' && command<'5') {
-		gClock.setAlarm(command-'1', arg1*10+arg2, arg3*10+arg4);
+		hToSet = arg1*10+arg2;
+		mToSet = arg3*10+arg4;
+		toSet = command-'1' + 2;
 		responseMsg = correctMsg;
 	} else {
 		responseMsg = invalidMsg;
