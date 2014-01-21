@@ -97,6 +97,8 @@ void onReceiveTask(char* msg)
 
 int main(void)
 {
+	DDRB |= 0xf0;
+	
 	// scheduler init
     scheduler_init(gClock.getDisplay());
     scheduler_addPeriodicTask(oneSecondTask, 1000);

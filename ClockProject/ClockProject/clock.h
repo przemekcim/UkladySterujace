@@ -34,12 +34,16 @@ struct SAlarm
 	void setEnabled(bool enabled);			// enable / disable alarm
 	void tryActivate(uint8_t h, uint8_t m);	// activates alarm if passed time is this alarm time
 	void setAlarm(uint8_t h, uint8_t m);	// sets alarm
+	void stop();							// stop alarm
+	void setAlarmNo(uint8_t no);			// sets alarm number
 	
 	uint8_t _hh;							// hours
 	uint8_t _mm;							// minutes
+	uint8_t _alarmNo;						// number of alarm : diode that will be set on
 	bool _isEnabled;						// if alarm is active
 };
 
+// alarms on PORTB 4 oldest bits
 struct SClock 
 {
 	SClock();

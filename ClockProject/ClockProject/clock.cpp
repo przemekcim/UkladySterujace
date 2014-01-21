@@ -33,6 +33,9 @@ SClock::SClock()
 	_edited = 0;
 	_show = 0;
 	
+	for(uint8_t i = 0; i<4; ++i)
+		_alarms[i].setAlarmNo(i);
+	
 	redraw();
 }
 
@@ -98,7 +101,8 @@ void SClock::handle(uint8_t button)
 	if(button == BT_C)
 	{
 		//stop alarm
-		// TODO
+		for(uint8_t i = 0; i<4; ++i) 
+			_alarms[i].stop();
 		return;
 	}
 	
@@ -224,7 +228,7 @@ void SAlarm::setEnabled(bool enabled)
 void SAlarm::tryActivate(uint8_t h, uint8_t m)
 {
 	if(m==_mm && h==_hh) {
-		// TODO
+		PINB |= (1<<(4+no));
 	}
 }
 
@@ -236,4 +240,14 @@ void SAlarm::setAlarm(uint8_t h, uint8_t m)
 		_mm = m;
 		_isEnabled = true;
 	}
+}
+
+void SAlarm::stop() 
+{
+	PINB &= ~(1<<(4+no));
+}
+
+void SAlarm::setAlarmNo(uint8_t no)
+{
+	_alarmNo = no;
 }
